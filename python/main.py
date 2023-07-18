@@ -6,12 +6,15 @@ import json
 
 def convert_epub(epub_name):
     book = epub.read_epub(epub_name)
-    print(book.get_metadata('DC','title')[0][0])
-    html_arr = book.get_items_of_type(ebooklib.ITEM_DOCUMENT)
-    res_arr = []
-    i = 0
 
+    html_arr = book.get_items_of_type(ebooklib.ITEM_DOCUMENT)
+
+    toc_obj = []
+    
+    res_arr = []
+    j = 0
     for doc in html_arr:
+        toc_obj[j] = (f'{doc.get_name()}', len(res_arr))
         content = BeautifulSoup(doc.get_content(),'html.parser')
         if(content.h1): res_arr.append(content.h1.get_text())
         if(content.h2): res_arr.append(content.h2.get_text())
@@ -19,11 +22,31 @@ def convert_epub(epub_name):
         if(content.h4): res_arr.append(content.h4.get_text())
         if(content.h5): res_arr.append(content.h5.get_text())
         for p in content.find_all('p'):
-            for sentence in re.findall("[^\.\?!\:]+[\.\?!\:…]?[\"\”\)]?",re.sub("\s{2,}"," ",re.sub("\,\s*$",":",p.get_text().replace('\n',' ').replace('/t','').replace('Mr.','Mr').replace('Mrs.','Mrs').replace('St.','St').replace('E.','E').replace('L.A.','LA').replace('. …','…').replace('A.M.','AM').replace('P.M.','PM')))):
-                if not sentence == ' ':
-                    res_arr.append(sentence)
+            for sentence in re.findall(
+                "[^\.\?!\:]+[\.\?!\:…]?[\"\”\)]?",
+                re.sub("\s{2,}"," ",
+                        re.sub("\,\s*$",":",
+                              p.get_text()
+                              .replace('\n',' ')
+                              .replace('/t','')
+                              .replace('Mr.','Mr')
+                              .replace('Mrs.','Mrs')
+                              .replace('St.','St')
+                              .replace('E.','E')
+                              .replace('L.A.','LA')
+                              .replace('. …','…')
+                              .replace('A.M.','AM')
+                              .replace('P.M.','PM')
+                        )
+                )
+            ):
+                if not sentence == ' ': res_arr.append(sentence)
             if(len(res_arr)>0): res_arr[-1] = res_arr[-1] + '¶'
+        j += 1
 
-    print(repr(res_arr[0]))
-    json_string = json.dumps({"title":book.get_metadata('DC','title')[0][0],"sentences":res_arr,"identifier":book.get_metadata('DC', 'identifier')[0][0]})
+    json_string = json.dumps(
+        {"title":book.get_metadata('DC','title')[0][0],
+         "sentences":res_arr,
+         "identifier":book.get_metadata('DC', 'identifier')[0][0]}
+    )
     return json_string
