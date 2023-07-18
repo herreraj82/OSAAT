@@ -14,7 +14,7 @@ export default function FooterBar(props) {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                paddingBottom: (Platform.OS === 'android' ? StatusBar.currentHeight * 2 : 0) + 20,
+                paddingBottom: (Platform.OS === 'android' ? StatusBar.currentHeight : 0) + 20,
                 }}
         >
                 <Button title="<--" onPress={() => props.handlePress(-1)} />
