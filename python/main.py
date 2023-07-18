@@ -9,12 +9,12 @@ def convert_epub(epub_name):
 
     html_arr = book.get_items_of_type(ebooklib.ITEM_DOCUMENT)
 
-    toc_obj = []
+    toc_arr = []
     
     res_arr = []
     j = 0
     for doc in html_arr:
-        toc_obj[j] = (f'{doc.get_name()}', len(res_arr))
+        toc_arr[j] = (f'{doc.get_name()}', len(res_arr))
         content = BeautifulSoup(doc.get_content(),'html.parser')
         if(content.h1): res_arr.append(content.h1.get_text())
         if(content.h2): res_arr.append(content.h2.get_text())
@@ -47,6 +47,7 @@ def convert_epub(epub_name):
     json_string = json.dumps(
         {"title":book.get_metadata('DC','title')[0][0],
          "sentences":res_arr,
-         "identifier":book.get_metadata('DC', 'identifier')[0][0]}
+         "identifier":book.get_metadata('DC', 'identifier')[0][0]},
+         "toc":toc_arr
     )
     return json_string
