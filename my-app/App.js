@@ -17,8 +17,8 @@ export default function App() {
   async function convertEbook() {
     const file     = await DocumentPicker.getDocumentAsync();
     const response = await FileSystem.uploadAsync(
-      'http://loskotar.pythonanywhere.com?filename='+file.name.split('.')[0],
-      file.uri,
+      'http://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
+      file.assets[0].uri,
       {
         httpMethod: 'POST',
         uploadType: FileSystem.FileSystemUploadType.MULTIPART,

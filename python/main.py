@@ -25,17 +25,20 @@ def convert_epub(epub_name):
                 "[^\.\?!\:]+[\.\?!\:…]?[\"\”\)]?",
                 re.sub("\s{2,}"," ",
                         re.sub("\,\s*$",":",
-                              p.get_text()
-                              .replace('\n',' ')
-                              .replace('/t','')
-                              .replace('Mr.','Mr')
-                              .replace('Mrs.','Mrs')
-                              .replace('St.','St')
-                              .replace('E.','E')
-                              .replace('L.A.','LA')
-                              .replace('. …','…')
-                              .replace('A.M.','AM')
-                              .replace('P.M.','PM')
+                              re.sub("([A-Z])\.", r'\1',
+                                p.get_text()
+                                .replace('\n',' ')
+                                .replace('/t','')
+                                .replace('Mr.','Mr')
+                                .replace('Mrs.','Mrs')
+                                .replace('St.','St')
+                                .replace('E.','E')
+                                .replace('L.A.','LA')
+                                .replace('. …','…')
+                                .replace(' . . .','…')
+                                .replace('A.M.','AM')
+                                .replace('P.M.','PM')
+                              )
                         )
                 )
             ):
