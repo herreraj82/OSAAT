@@ -35,7 +35,7 @@ import {
         <View style={{width:"100%", minHeight:Dimensions.get('window').height/2,flexDirection:'column',justifyContent:'space-around'}}>
             <Button style={{width:"100%"}} title="Convert Ebook" onPress={props.osaat} />
             {fileTable && fileTable.map((elt) => {
-                return (<Button style={{width:"100%"}} title={elt.title} key={elt.title} onPress={() => props.openConvertedBook(elt.sentences_uri, elt.save_uri)} />)
+                return (<Button style={{width:"100%"}} title={elt.title} key={elt.title} onPress={() => props.openConvertedBook(elt.sentences_uri, elt.save_uri, elt.toc)} />)
             })}
         </View>
     )

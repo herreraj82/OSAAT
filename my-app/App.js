@@ -12,10 +12,10 @@ export default function App() {
   const [sentences, setSentences] = useState(0);
   const [currPage,  setCurrPage]  = useState(0);
   const [currSaveUri, setCurrSaveUri] = useState('');
+  const [tocObj, setTocObj] = useState(0);
 
   async function convertEbook() {
     const file     = await DocumentPicker.getDocumentAsync();
-    console.log(file.name.split('.')[0]);
     const response = await FileSystem.uploadAsync(
       'http://loskotar.pythonanywhere.com?filename='+file.name.split('.')[0],
       file.uri,
@@ -28,11 +28,12 @@ export default function App() {
     let response_obj = JSON.parse(response.body);
     let sentences_uri = FileSystem.documentDirectory + response_obj.title + ".txt";
     FileSystem.writeAsStringAsync(sentences_uri, JSON.stringify(response_obj));
+    setTocObj(response_obj.toc);
     setSentences(response_obj.sentences);
     let save_uri = FileSystem.documentDirectory + response_obj.title +"_save.txt";
-    console.log(save_uri);
     FileSystem.writeAsStringAsync(save_uri, "0");
     setCurrSaveUri(save_uri);
+    
 
     let fileTableContents = await FileSystem.readAsStringAsync(
       FileSystem.documentDirectory+'filetable.txt'
@@ -46,7 +47,8 @@ export default function App() {
       identifier:response_obj.identifier,
       title:response_obj.title,
       sentences_uri:sentences_uri,
-      save_uri:save_uri
+      save_uri:save_uri,
+      toc:response_obj.toc
     });
 
     FileSystem.writeAsStringAsync(FileSystem.documentDirectory+'filetable.txt',JSON.stringify(fileTable));
@@ -66,8 +68,9 @@ export default function App() {
     );
   };
 
-  async function openConvertedBook(sentences_uri, save_uri) {
+  async function openConvertedBook(sentences_uri, save_uri, toc) {
     const converted_contents = JSON.parse(await FileSystem.readAsStringAsync(sentences_uri));
+    setTocObj(toc);
     setSentences(converted_contents.sentences);
     setCurrSaveUri(save_uri);
     const converted_save = await FileSystem.readAsStringAsync(save_uri);
@@ -89,7 +92,7 @@ export default function App() {
         minHeight: Dimensions.get("screen").height
       }}
     >
-      <MainScreen sentences={sentences} osaat={convertEbook} handlePress={handlePress} currPage={currPage} setCurrPage={setCurrPage} openConvertedBook={openConvertedBook} />
+      <MainScreen sentences={sentences} osaat={convertEbook} handlePress={handlePress} currPage={currPage} setCurrPage={setCurrPage} openConvertedBook={openConvertedBook} tocObj={tocObj}  setTocObj={setTocObj}/>
     </View>
     </>
   );

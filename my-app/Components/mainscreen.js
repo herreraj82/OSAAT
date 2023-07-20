@@ -22,7 +22,7 @@ import {
 
             {props.sentences.length > 0 && (<ContentPane handlePress={props.handlePress} sentences={props.sentences} currPage={props.currPage}/>)}
 
-            {props.sentences.length > 0 && ( <FooterBar handlePress={props.handlePress} sentences={props.sentences} currPage={props.currPage} setCurrPage={props.setCurrPage}/>)}
+            {props.sentences.length > 0 && ( <FooterBar handlePress={props.handlePress} sentences={props.sentences} currPage={props.currPage} setCurrPage={props.setCurrPage} tocObj={props.tocObj} setTocObj={props.setTocObj}/>)}
       </View>
     );
   }
