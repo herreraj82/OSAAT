@@ -68,6 +68,13 @@ export default function App() {
     );
   };
 
+  function backToHome() {
+    setSentences(0);
+    setCurrPage(0);
+    setCurrSaveUri('');
+    setTocObj(0);
+  }
+
   async function openConvertedBook(sentences_uri, save_uri, toc) {
     const converted_contents = JSON.parse(await FileSystem.readAsStringAsync(sentences_uri));
     setTocObj(toc);
@@ -92,7 +99,7 @@ export default function App() {
         minHeight: Dimensions.get("screen").height
       }}
     >
-      <MainScreen sentences={sentences} osaat={convertEbook} handlePress={handlePress} currPage={currPage} setCurrPage={setCurrPage} openConvertedBook={openConvertedBook} tocObj={tocObj}  setTocObj={setTocObj}/>
+      <MainScreen sentences={sentences} osaat={convertEbook} handlePress={handlePress} currPage={currPage} setCurrPage={setCurrPage} openConvertedBook={openConvertedBook} tocObj={tocObj}  setTocObj={setTocObj} backToHome={backToHome}/>
     </View>
     </>
   );
