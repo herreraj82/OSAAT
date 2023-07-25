@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "OSAAT",
-    "slug": "osaat",
+    "slug": "my-app",
     "version": "0.0.1",
     "orientation": "portrait",
     "jsEngine": "hermes",
