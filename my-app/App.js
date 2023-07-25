@@ -15,6 +15,7 @@ export default function App() {
   const [tocObj, setTocObj] = useState(0);
 
   async function convertEbook() {
+    try{
     const file     = await DocumentPicker.getDocumentAsync();
     const response = await FileSystem.uploadAsync(
       'http://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
@@ -54,6 +55,9 @@ export default function App() {
     FileSystem.writeAsStringAsync(FileSystem.documentDirectory+'filetable.txt',JSON.stringify(fileTable));
 
     setCurrPage(await FileSystem.readAsStringAsync(save_uri));
+    } catch(error) {
+      console.log(error)
+    }
   };
 
   async function handlePress(summand) {

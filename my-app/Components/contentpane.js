@@ -12,6 +12,7 @@ import TextPane from "./textpane";
 export default function ContentPane(props) {
   return (
       <>
+      
       <TouchableWithoutFeedback 
           style={{width:"100%"}}
           onPress={(e) =>
