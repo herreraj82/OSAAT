@@ -18,7 +18,7 @@ export default function App() {
     try{
     const file     = await DocumentPicker.getDocumentAsync();
     const response = await FileSystem.uploadAsync(
-      'http://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
+      'https://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
       file.assets[0].uri,
       {
         httpMethod: 'POST',
