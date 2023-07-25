@@ -25,7 +25,7 @@ def convert_epub(epub_name):
                 "[^\.\?!\:]+[\.\?!\:…]?[\"\”\)]?",
                 re.sub("\s{2,}"," ",
                         re.sub("\,\s*$",":",
-                              re.sub("([A-Z])\.", r'\1',
+                              re.sub("( [A-Z])\.", r'\1',
                                 p.get_text()
                                 .replace('\n',' ')
                                 .replace('/t','')
