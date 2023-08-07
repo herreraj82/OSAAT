@@ -16,45 +16,50 @@ export default function App() {
 
   async function convertEbook() {
     try{
-    const file     = await DocumentPicker.getDocumentAsync();
-    const response = await FileSystem.uploadAsync(
-      'https://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
-      file.assets[0].uri,
-      {
-        httpMethod: 'POST',
-        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-        fieldName:  'uploadedFile',
+      const file     = await DocumentPicker.getDocumentAsync();
+      
+      if (file.canceled) {
+        return;
       }
-    );
-    let response_obj = JSON.parse(response.body);
-    let sentences_uri = FileSystem.documentDirectory + response_obj.title + ".txt";
-    FileSystem.writeAsStringAsync(sentences_uri, JSON.stringify(response_obj));
-    setTocObj(response_obj.toc);
-    setSentences(response_obj.sentences);
-    let save_uri = FileSystem.documentDirectory + response_obj.title +"_save.txt";
-    FileSystem.writeAsStringAsync(save_uri, "0");
-    setCurrSaveUri(save_uri);
-    
 
-    let fileTableContents = await FileSystem.readAsStringAsync(
-      FileSystem.documentDirectory+'filetable.txt'
-    );
+      const response = await FileSystem.uploadAsync(
+        'https://loskotar.pythonanywhere.com?filename='+file.assets[0].name.split('.')[0],
+        file.assets[0].uri,
+        {
+          httpMethod: 'POST',
+          uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+          fieldName:  'uploadedFile',
+        }
+      );
+      let response_obj = JSON.parse(response.body);
+      let sentences_uri = FileSystem.documentDirectory + response_obj.title + ".txt";
+      FileSystem.writeAsStringAsync(sentences_uri, JSON.stringify(response_obj));
+      setTocObj(response_obj.toc);
+      setSentences(response_obj.sentences);
+      let save_uri = FileSystem.documentDirectory + response_obj.title +"_save.txt";
+      FileSystem.writeAsStringAsync(save_uri, "0");
+      setCurrSaveUri(save_uri);
+      
 
-    let fileTable = JSON.parse(
-        fileTableContents
-    );
+      let fileTableContents = await FileSystem.readAsStringAsync(
+        FileSystem.documentDirectory+'filetable.txt'
+      );
 
-    fileTable.push({
-      identifier:response_obj.identifier,
-      title:response_obj.title,
-      sentences_uri:sentences_uri,
-      save_uri:save_uri,
-      toc:response_obj.toc
-    });
+      let fileTable = JSON.parse(
+          fileTableContents
+      );
 
-    FileSystem.writeAsStringAsync(FileSystem.documentDirectory+'filetable.txt',JSON.stringify(fileTable));
+      fileTable.push({
+        identifier:response_obj.identifier,
+        title:response_obj.title,
+        sentences_uri:sentences_uri,
+        save_uri:save_uri,
+        toc:response_obj.toc
+      });
 
-    setCurrPage(await FileSystem.readAsStringAsync(save_uri));
+      FileSystem.writeAsStringAsync(FileSystem.documentDirectory+'filetable.txt',JSON.stringify(fileTable));
+
+      setCurrPage(await FileSystem.readAsStringAsync(save_uri));
     } catch(error) {
       console.log(error)
     }
@@ -63,7 +68,7 @@ export default function App() {
   async function handlePress(summand) {
     const newPage = Math.min(
       Math.max(Number(currPage) + summand, 0),
-      sentences.length
+      sentences.length - 1
     );
     setCurrPage(newPage);
     await FileSystem.writeAsStringAsync(

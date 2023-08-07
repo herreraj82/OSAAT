@@ -28,7 +28,7 @@ export default function FooterBar(props) {
                 onSubmitEditing={(e) => props.handlePress(e.nativeEvent.text - props.currPage)} 
                 />
                 <Text style={{ color: "white", flex:1,textAlign: "center" }}>/</Text>
-                <Text style={{ color: "white", flex:1 }}>{props.sentences.length}</Text>
+                <Text style={{ color: "white", flex:1 }}>{props.sentences.length - 1}</Text>
                 <Picker style={{color: "white", flex:2, fontSize: 4}}
                         selectedValue={0}
                         onValueChange={(itemValue, itemIndex) =>
